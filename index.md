@@ -1,5 +1,5 @@
 ---
-title: Understanding Recipe Traffic Using Machine Learning Models
+title: Understanding Recipe Traffic Using Machine Learning Models ![RecipeTraffic](images/recipetraffic.webp)
 layout: default
 ---
 
