@@ -1,9 +1,11 @@
 ---
-title: Understanding Recipe Traffic Using Machine Learning Models ![RecipeTraffic](images/recipetraffic.webp)
+title: Understanding Recipe Traffic Using Machine Learning Models 
 layout: default
 ---
 
 # Understanding Recipe Traffic Using Machine Learning Models
+![RecipeTraffic](images/recipetraffic.webp)
+
 
 ## Introduction
 Why do some recipes gain massive user engagement while others remain overlooked? This blog explores how machine learning can predict recipe traffic using nutritional content and categorical features. By understanding key factors influencing user behavior, we aim to improve recipe recommendations and optimize user engagement.
