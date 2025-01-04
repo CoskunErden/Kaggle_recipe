@@ -164,11 +164,11 @@ The confusion matrix below demonstrates the classification performance of Logist
 ![RecipeTraffic](images/sns_heatmaplogreg.png) 
 *Confusion matrix for Logistic Regression.*
 
-![Confusion Matrix - Gradient Boosting](images/gb_confusion_matrix_roc_curve.png)
-*Confusion matrix for Gradient Boosting.*
-
 ![RecipeTraffic](images/Roc_curvelogreg.png)  
 *Receiver Operating Characteristic curve for Logistic Regression.*
+
+![Confusion Matrix - Gradient Boosting](images/gb_confusion_matrix_roc_curve.png)
+*Confusion matrix for Gradient Boosting.*
 
 ---
 
