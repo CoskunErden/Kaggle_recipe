@@ -147,9 +147,7 @@ To predict recipe traffic, six machine learning models were trained and evaluate
 
 ---
 
-Here’s how we can restructure the **Visualizations** section and integrate it into relevant parts of your content like **Performance Metrics** and **Feature Importance**:
 
----
 
 ### **Performance Metrics**
 To evaluate each model, the following metrics were used:
@@ -166,7 +164,7 @@ The confusion matrix below demonstrates the classification performance of Logist
 ![RecipeTraffic](images/sns_heatmaplogreg.png) 
 *Confusion matrix for Logistic Regression.*
 
-![Confusion Matrix - Gradient Boosting](gb_confusion_matrix_roc_curve.png)
+![Confusion Matrix - Gradient Boosting](images/gb_confusion_matrix_roc_curve.png)
 *Confusion matrix for Gradient Boosting.*
 
 ![RecipeTraffic](images/Roc_curvelogreg.png)  
