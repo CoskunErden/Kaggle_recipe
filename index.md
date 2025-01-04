@@ -25,21 +25,131 @@ The dataset includes:
 - **Nutritional Features**: Calories, protein, sugar, carbohydrates, etc.
 - **Categorical Features**: Dish types (e.g., Breakfast, Dessert) and servings.
 
+
 ### **Data Preprocessing Steps**
-1. **Handling Missing Values**: Used imputation techniques for missing data and removed incomplete entries where necessary.
-2. **Standardization**: Standardized numerical features (e.g., calories, protein) to ensure compatibility across models.
-3. **One-Hot Encoding**: Transformed categorical features (e.g., dish types) into numerical representations for machine learning models.
+
+1. **Handling Missing Values**:
+   - Missing values in critical numerical columns (e.g., calories, protein, and sugar) were imputed using the mean or median, depending on the skewness of the data distribution.
+   - Rows with excessive missing values across multiple columns were removed to maintain data integrity.
+   - For categorical features, missing values were filled using the mode or a placeholder category, ensuring model compatibility.
+
+2. **Standardization**:
+   - Numerical features such as calories, protein, and sugar were standardized using Z-score normalization. This technique ensured all numerical inputs were on the same scale, which is critical for models like     
+   Support Vector Machines (SVM) and K-Nearest Neighbors (KNN).
+
+3. **One-Hot Encoding**:
+   - Categorical features, including dish types (e.g., Breakfast, Dessert), were transformed into binary columns using one-hot encoding.
+   - The one-hot encoding process expanded the feature space to ensure compatibility with machine learning algorithms that require numerical inputs.
+
+4. **Feature Engineering**:
+   - Interaction terms were created for key numerical features, such as combining protein and sugar, to capture nonlinear relationships.
+   - Logarithmic transformations were applied to highly skewed numerical features (e.g., calorie counts) to normalize distributions and reduce the impact of outliers.
+
+5. **Data Splitting**:
+   - The dataset was split into training (70%), validation (15%), and testing (15%) subsets using stratified sampling to preserve the class distribution in each subset.
+   - The validation set was used to tune hyperparameters, ensuring unbiased performance evaluation on the testing set.
+
+6. **Class Imbalance Handling**:
+   - To address class imbalance in the target variable, oversampling (using SMOTE) and undersampling techniques were tested.
+   - A weighted loss function was implemented for certain models to penalize misclassification of the minority class more heavily.
+
 
 ---
 
-## Model Development
-We trained and evaluated six machine learning models:
-1. **Logistic Regression**
-2. **Random Forest**
-3. **K-Nearest Neighbors**
-4. **Support Vector Machine**
-5. **Gradient Boosting**
-6. **Neural Networks**
+## **Model Development**
+
+### **Overview**
+To predict recipe traffic, six machine learning models were trained and evaluated. Each model was optimized through hyperparameter tuning, ensuring the best possible performance on the validation set.
+
+### **Models and Technical Details**
+
+1. **Logistic Regression**:
+   - **Purpose**: A linear model suitable for binary classification tasks with interpretable coefficients.
+   - **Parameters**:
+     - **Penalty**: `l2` (Ridge regularization) to prevent overfitting.
+     - **C**: 1.0 (inverse regularization strength, tuned between `0.1` and `10`).
+     - **Solver**: `liblinear` (suitable for small to medium-sized datasets).
+   - **Optimization**:
+     - Standardized all numerical features to ensure coefficients are on the same scale.
+
+2. **Random Forest**:
+   - **Purpose**: An ensemble learning method combining multiple decision trees to reduce variance and overfitting.
+   - **Parameters**:
+     - **Number of Trees**: `n_estimators = 100` (tuned in the range of `50–200`).
+     - **Maximum Depth**: `max_depth = 10` (tuned to prevent overfitting).
+     - **Minimum Samples Split**: `min_samples_split = 5` (minimum number of samples required to split an internal node).
+     - **Criterion**: `gini` (default for impurity-based splits).
+   - **Optimization**:
+     - Performed grid search over key hyperparameters.
+     - Feature importance scores were extracted post-training.
+
+3. **K-Nearest Neighbors (KNN)**:
+   - **Purpose**: A non-parametric method relying on proximity to predict class labels.
+   - **Parameters**:
+     - **Number of Neighbors**: `n_neighbors = 5` (tuned between `3–15`).
+     - **Distance Metric**: `minkowski` with `p=2` (equivalent to Euclidean distance).
+     - **Weights**: `uniform` (all neighbors have equal weight).
+   - **Optimization**:
+     - Applied feature scaling (standardization) to ensure equal contribution from all numerical features.
+     - Validation performance declined with higher `k` due to loss of local structure.
+
+4. **Support Vector Machine (SVM)**:
+   - **Purpose**: A powerful linear classifier effective in high-dimensional spaces.
+   - **Parameters**:
+     - **Kernel**: `rbf` (Radial Basis Function) to capture nonlinear relationships.
+     - **Regularization Parameter**: `C = 1.0` (tuned between `0.1–10`).
+     - **Gamma**: `scale` (controls kernel influence, tuned between `0.001–1.0`).
+   - **Optimization**:
+     - Used grid search to fine-tune hyperparameters.
+     - Balanced class weights to address class imbalance.
+
+5. **Gradient Boosting**:
+   - **Purpose**: An ensemble method that builds trees sequentially, correcting previous errors.
+   - **Parameters**:
+     - **Learning Rate**: `0.1` (tuned between `0.01–0.3`).
+     - **Number of Estimators**: `n_estimators = 100` (optimized for validation performance).
+     - **Maximum Depth**: `max_depth = 3` (controls complexity of individual trees).
+     - **Subsample**: `0.8` (percentage of samples used for training each tree).
+   - **Optimization**:
+     - Early stopping based on validation loss to prevent overfitting.
+
+6. **Neural Networks**:
+   - **Purpose**: A multilayer perceptron (MLP) for capturing complex nonlinear relationships.
+   - **Architecture**:
+     - Input Layer: Matches the number of input features.
+     - Hidden Layers: Two layers with `128` and `64` neurons, respectively.
+     - Output Layer: Single neuron with sigmoid activation for binary classification.
+   - **Parameters**:
+     - **Activation Function**: `ReLU` for hidden layers.
+     - **Optimizer**: `Adam` with learning rate `0.001`.
+     - **Loss Function**: Binary cross-entropy.
+     - **Batch Size**: 32.
+     - **Epochs**: 50 (with early stopping based on validation accuracy).
+   - **Optimization**:
+     - Used dropout (`rate = 0.2`) to mitigate overfitting.
+     - Applied batch normalization for faster convergence.
+
+### **Model Training Workflow**
+1. **Data Splitting**:
+   - Training Set: 70%.
+   - Validation Set: 15%.
+   - Testing Set: 15%.
+
+2. **Cross-Validation**:
+   - Stratified 5-fold cross-validation was used to ensure balanced class distributions in all splits.
+
+3. **Hyperparameter Tuning**:
+   - Grid search and random search were employed to identify the best hyperparameters for each model.
+   - Validation performance metrics (e.g., F1 Score and ROC AUC) guided parameter selection.
+
+4. **Performance Evaluation**:
+   - Each model was evaluated using the testing set to ensure unbiased performance estimates.
+
+---
+
+Here’s how we can restructure the **Visualizations** section and integrate it into relevant parts of your content like **Performance Metrics** and **Feature Importance**:
+
+---
 
 ### **Performance Metrics**
 To evaluate each model, the following metrics were used:
@@ -49,46 +159,30 @@ To evaluate each model, the following metrics were used:
 - **F1 Score**: Weighted average of precision and recall.
 - **ROC AUC Score**: Measures the ability of the model to distinguish between classes.
 
+### **Visualization of Performance**
+#### **Confusion Matrices**
+The confusion matrix below demonstrates the classification performance of Logistic Regression and Gradient Boosting. These visualizations provide a breakdown of predictions for true positives, true negatives, false positives, and false negatives. The ROC curves evaluate the trade-off between sensitivity (True Positive Rate) and specificity (False Positive Rate) for the two best-performing models:
+
+![RecipeTraffic](images/sns_heatmaplogreg.png) 
+*Confusion matrix for Logistic Regression.*
+
+![Confusion Matrix - Gradient Boosting](gb_confusion_matrix_roc_curve.png)
+*Confusion matrix for Gradient Boosting.*
+
+![RecipeTraffic](images/Roc_curvelogreg.png)  
+*Receiver Operating Characteristic curve for Logistic Regression.*
+
 ---
 
-## Results and Insights
-
-### **Model Comparison**
-Logistic Regression and Gradient Boosting demonstrated the best overall performance. K-Nearest Neighbors (KNN) struggled due to its sensitivity to feature scaling and class imbalance.
-
-| Model                  | Precision | Accuracy | Recall | F1 Score | ROC AUC |
-|------------------------|-----------|----------|--------|----------|---------|
-| Logistic Regression    | 0.80      | 0.77     | 0.80   | 0.80     | 0.84    |
-| Gradient Boosting      | 0.73      | 0.72     | 0.84   | 0.78     | 0.82    |
-| Neural Networks        | 0.75      | 0.75     | 0.77   | 0.76     | 0.79    |
-| Random Forest          | 0.71      | 0.70     | 0.78   | 0.74     | 0.78    |
-| Support Vector Machine | 0.80      | 0.77     | 0.80   | 0.80     | 0.82    |
-| K-Nearest Neighbors    | 0.60      | 0.56     | 0.67   | 0.61     | 0.53    |
-
 ### **Feature Importance**
-Key insights from feature importance analysis:
+Key insights from feature importance analysis reveal the features that significantly impact model predictions. Gradient Boosting provides a ranking of these features:
+
 1. **Protein**: The most critical predictor, strongly associated with user interest.
 2. **Vegetable**: Significant contribution to recipe popularity.
 3. **Breakfast**: Consistently highlighted as a high-impact categorical feature.
 
 ---
 
-## Visualizations
-### **Key Figures**
-1. **Feature Importance**: Bar plots showcasing the relative importance of features like protein and dish types.
-2. **Confusion Matrices**: Provided a detailed breakdown of model predictions for both classes.
-3. **ROC Curves**: Demonstrated the trade-off between true positive rates and false positive rates for each model.
-
-![Feature Importance Chart](#)  
-*Bar plot showing the top predictive features.*
-
-![Confusion Matrix](#)  
-*Confusion matrix visualizing classification performance.*
-
-![ROC Curve](#)  
-*Receiver Operating Characteristic curve for Gradient Boosting.*
-
----
 
 ## Conclusion
 
