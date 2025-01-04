@@ -202,6 +202,6 @@ Key insights from feature importance analysis reveal the features that significa
 ---
 
 ## Explore the Full Project
-For detailed code, visualizations, and further insights, visit the [GitHub Repository](#) or read the [Project README](#).
+For detailed code, visualizations, and further insights, visit the [GitHub Repository](https://github.com/CoskunErden/Kaggle_recipe).
 
 ---
